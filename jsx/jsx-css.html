@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+       var style={
+        color:'red',
+        border:'1px solid #000'
+       };
+        var HelloWorld = React.createClass({
+            render: function() {
+                return ( 
+                  <div style={style}>
+                  < p >
+                    Hello, World < /p>
+                  </div>
+                );
+            }
+        });
+
+          ReactDOM.render( < HelloWorld/>, document.getElementById('example') ); 
+
+    </script>
+</body>
+
+</html>

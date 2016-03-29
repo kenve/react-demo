@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+        //创建组件,直接在jsx中编写html代码 
+        var HelloWorld = React.createClass({
+            render: function() {
+                return ( < p >
+                    Hello, < input type = "text"
+                    placeholder = "Your name here" / > !It is { this.props.date.toTimeString() } < /p>
+                );
+            }
+        });
+
+      setInterval(function() {
+          //调用React的render方法，把组件渲染到页面中
+          //render接收两个参数，第一个是：一段jsx代码，第二个是渲染目标
+          //前面声明组件可以当作标签来使用，即<HelloWorld />
+          //将名称为的属性date值，传入自定义组件中
+          ReactDOM.render( < HelloWorld date = { new Date() }/>, document.getElementById('example') ); 
+        }, 500);
+
+    </script>
+</body>
+
+</html>
