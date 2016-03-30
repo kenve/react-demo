@@ -28,6 +28,7 @@ React官网提供的Html模板，所有demo都是在这个Html模板内编写的
 上面的html模板有几个地方要注意：
  * 要在`head`便签中引入`react.js`、`react-dom.js`、`browser.min.js`三个js库,而且要在jsx代码前引入，其中，`react.js` 是 React 的核心库，`react-dom.js` 是提供与 DOM 相关的功能，`Browser.js` 的作用是将 JSX 语法转为 JavaScript语法，这一步很消耗时间，实际上线的时候，应该使用构建工具构建完成后在放到服务器中。
  * 因为 React 独有的 JSX 语法，跟 JavaScript 不兼容。凡是使用 JSX 的地方，都要加上 `type="text/babel"`,所以`body`中的 `<script>` 标签的 `type` 属性为 `text/babel`。
+
 ## HelloWord 
 官网提供了一个非常简单的HelloWord 的代码，将如下嵌入html模板中即可:
 ```javascript
@@ -271,7 +272,7 @@ var HelloWorld = React.createClass({
 });
 ReactDOM.render( < HelloWorld/>, document.getElementById('example') ); 
 ```
- * key：提高渲染性能
+ * key：提高渲染性能,不能出现相同的key,key值必须是唯一的
 
 ```js
 var HelloWorld = React.createClass({
@@ -287,6 +288,103 @@ var HelloWorld = React.createClass({
 });
 ReactDOM.render( < HelloWorld/>, document.getElementById('example') ); 
 ```
+#### JSX源码
 ## React组件生命周期详解
+#### 什么是组件的生命周期
+ * 组件本质上是状态机，输入确定，输出一定确定。
+ * 状态发生转换时会触发不同的钩子函数，从而让开发者有机会做出响应。
+ * 可以用事件的思路来理解状态。
+ * 不同生命周期内可以自定义的函数。
+ * 组件生命周期可以分为：初始化 → 运行中 → 销毁，即：Mounting（已插入真实`DOM`）→ Updating(正在被重新渲染) → Unmounting(已移出真实`DOM`)
+
+#### 初始化阶段函数介绍
+初始化阶段可以使用的函数：
+ * getDefaultProps：只调用一次，实例之间共享引用
+ * getInitialState：初始化每个实例特有的状态
+ * componentWillMount：render之前最后一次修改状态的机会
+ * render：只能访问this.props和this.state，只有一个顶层组件，不允许修改状态和DOM输出。
+ * componentDidMount：成功render并渲染完成真实DOM之后触发，可以修改DOM
+
+使用实例：
+ * 触发顺序`getDefaultProps` → `getInitialState` → `componentWillMount` → `render` → `componentDidMount`
+```js
+var HelloWorld = React.createClass({ 
+    	//只调用一次，实例之间共享引用
+     	getDefaultProps:function () {
+     		console.log('getDefaultProps,1');
+     	},
+     	//初始化每个实例特有的状态
+     	getInitialState:function () {
+     		console.log('getInitialState,2');
+     		return null;
+     	},
+     	//render之前最后一次修改状态的机会
+     	componentWillMount:function () {
+     		console.log('componentWillMount,3');
+     	},
+     	//只能访问this.props和this.state，只有一个顶层组件，不允许修改状态和DOM输出
+     	render: function() { 
+     		console.log('render,4');
+         	return (
+		       <div>
+		           <p>
+		             Hello, World！
+		            </p>
+		       </div>
+     	    ); 
+       },
+       //成功render并渲染完成真实DOM之后触发，可以修改DOM
+        componentDidMount:function () {
+        	console.log('componentDidMount,5');
+        }
+   }); 
+ReactDOM.render(<HelloWorld/>, document.getElementById('example') );
+```
+ * 用法
+
+```js
+var count=0;
+var HelloWorld = React.createClass({ 
+	//只调用一次，实例之间共享引用
+ 	getDefaultProps:function () {
+ 		console.log('getDefaultProps,1');
+ 		return {name:'Tom'};
+ 	},
+ 	//初始化每个实例特有的状态
+ 	getInitialState:function () {
+ 		console.log('getInitialState,2');
+ 		return {
+ 			myCount:count++,
+ 			ready:false
+ 		};
+ 	},
+ 	//render之前最后一次修改状态的机会
+ 	componentWillMount:function () {
+ 		console.log('componentWillMount,3');
+ 		this.setState({
+ 			ready:true
+ 		})
+ 	},
+ 	//只能访问this.props和this.state，只有一个顶层组件，不允许修改状态和DOM输出
+ 	render: function() { 
+ 		console.log('render,4');
+     	return (
+	           <p>
+	             Hello, {this.props.name ? this.props.name : "World"}<br/>{"ready:" + this.state.ready} <br/>{"count:"+this.state.myCount}
+	            </p>
+ 	    ); 
+   },
+   //成功render并渲染完成真实DOM之后触发，可以修改DOM
+    componentDidMount:function () {
+    	console.log('componentDidMount,5');
+    	$(ReactDOM.findDOMNode(this)).append('surprise!');
+    }
+}); 
+ReactDOM.render(<div><HelloWorld/><br/><HelloWorld/></div>, document.getElementById('example') );
+```
+输出的页面及控制台信息如下：
+![页面显示结果](mounting02-result.png) ![控制台信息](images/mounting02-console-result.png)
+
+#### 运行中阶段函数介绍
 
 

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+        
+        	var count=0;
+	        var HelloWorld = React.createClass({ 
+	        	//只调用一次，实例之间共享引用
+	         	getDefaultProps:function () {
+	         		console.log('getDefaultProps,1');
+	         		return {name:'Tom'};
+	         	},
+	         	//初始化每个实例特有的状态
+	         	getInitialState:function () {
+	         		console.log('getInitialState,2');
+	         		return {
+	         			myCount:count++,
+	         			ready:false
+	         		};
+	         	},
+	         	//render之前最后一次修改状态的机会
+	         	componentWillMount:function () {
+	         		console.log('componentWillMount,3');
+	         		this.setState({
+	         			ready:true
+	         		})
+	         	},
+	         	//只能访问this.props和this.state，只有一个顶层组件，不允许修改状态和DOM输出
+	         	render: function() { 
+	         		console.log('render,4');
+		         	return (
+				           <p>
+				             Hello, {this.props.name ? this.props.name : "World"}<br/>{"ready:" + this.state.ready} <br/>{"count:"+this.state.myCount}
+				            </p>
+		     	    ); 
+	           },
+	           //成功render并渲染完成真实DOM之后触发，可以修改DOM
+                componentDidMount:function () {
+                	console.log('componentDidMount,5');
+                	$(ReactDOM.findDOMNode(this)).append('surprise!');
+                }
+	       }); 
+        ReactDOM.render(<div><HelloWorld/><br/><HelloWorld/></div>, document.getElementById('example') );
+    </script>
+</body>
+
+</html>
