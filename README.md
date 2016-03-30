@@ -45,6 +45,7 @@ React官网提供的Html模板，所有demo都是在这个Html模板内编写的
    * 是基于ECMAScript的一种新特性
    * 一种定义带属性结构的语法
    * JSX不是XML或者HTML,而是一种机制
+
 #### JSX的特点
    * 类XML语法容易接受
    * 结构清晰
@@ -52,6 +53,7 @@ React官网提供的Html模板，所有demo都是在这个Html模板内编写的
    * 抽象程度高（跨平台）
    * 代码模块化
    * 从左到右
+
 #### JSX的语法:
    jsx代码要使用`<script type="text/babel"></script>`标签包裹,JSX 的基本语法规则：遇到 HTML 标签（以 `<` 开头），就用 HTML 规则解析；遇到代码块（以 `{` 开头），就用 JavaScript 规则解析。所以允许 HTML 与 JavaScript 的混写。
 
@@ -92,7 +94,7 @@ React官网提供的Html模板，所有demo都是在这个Html模板内编写的
 * 添加组件属性，有一个地方需要注意，就是 `class` 属性需要写成 `className` ，`for` 属性需要写成 `htmlFor` ，这是因为 `class` 和 `for` 是 JavaScript 的保留字。
 
 #### JSX注释
-多行注释使用/**/,单行注释使用 //
+多行注释使用`/**/`,单行注释使用 `//`
 ```js
  var HelloWorld = React.createClass({
         render: function () {
@@ -234,7 +236,7 @@ ReactDOM.render( < HelloWorld/>, document.getElementById('example') );
 #### 非dom 属性
 非DOM属性：dangerouslySetInnerHTML、ref、key
 节点相似尽量写成一个，因为react会重新生成； 使用列表展示元素，元素加上key
-![React Diff算法流程](../images/diff.png)
+![React Diff算法流程](images/diff.png)
 
  * dangerouslySetInnerHTML：在JSX中直接插入HTML代码
 
@@ -286,4 +288,5 @@ var HelloWorld = React.createClass({
 ReactDOM.render( < HelloWorld/>, document.getElementById('example') ); 
 ```
 ## React组件生命周期详解
+
 
