@@ -1221,8 +1221,159 @@ rAF动画 | 兼容性一般、性能较高 | 将被CSS3替代
 SVG动画 | 高性能、能实现复杂效果 | 编写难度较大
 
 #### React使用CSS3动画
-
+传统的CSS3动画使用`$(...).addClass(...)`的方式控制`class`实现动画效果，而在`React`中这一步由`React`插件完成
 ![React中CSS3动画用法](images/animation-css3.png)
+* 实例 (查看[Demo](animation/animation-css3.html))
+在`head`中引入`react-with-addons.js`，并添加组件的四个状态的CSS3动画样式：
+```css
+.example-enter {
+  opacity: 0.01;
+}
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.example-leave {
+  opacity: 1;
+}
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+```
+```js
+var ReactCSSTransitionGroup= React.addons.CSSTransitionGroup;
+  var TodoList = React.createClass({
+    getInitialState: function() {
+      return {items: ['hello', 'world', 'click', 'me']};
+    },
+    handleAdd: function() {
+      var newItems =
+        this.state.items.concat([prompt('Enter some text')]);
+      this.setState({items: newItems});
+    },
+    handleRemove: function(i) {
+      var newItems = this.state.items.slice();
+      newItems.splice(i, 1);
+      this.setState({items: newItems});
+    },
+    render: function() {
+      var items = this.state.items.map(function(item, i) {
+        return (
+          <div key={item} onClick={this.handleRemove.bind(this, i)}>
+            {item}
+          </div>
+        );
+      }.bind(this));
+      return (
+        <div>
+          <button onClick={this.handleAdd}>Add Item</button>
+          <ReactCSSTransitionGroup transitionName="example" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
+            {items}
+          </ReactCSSTransitionGroup>
+        </div>
+      );
+    }
+  });
+
+ReactDOM.render(<TodoList/>, document.getElementById('example'));
+```
+以上代码实现了添加元素到`list`的淡入淡出的效果，首先引入扩展组件`ReactCSSTransitionGroup`。定义了一个`TodoList`的组件实现添加项和点击移除项的功能。
+
+#### React使用JS模拟动画
+为了兼容不支持CSS3的浏览器，用JS来模拟CSS3动画的效果
+动画 = 连续播放的静止页面 ← 帧
+transition: left 100px ease-in;  → 总时间1秒，每秒向右移动1/100px
+* 使用方法
+```js
+function doMove() {
+  foo.style.left=(foo.style.left+10)+'px';
+  setTimeout(doMove,20);
+  this.setState(...);
+}
+```
+* 实例 (查看[Demo](animation/animation-js.html))
+```js
+var Positioner = React.createClass({
+      getInitialState: function() {
+          return {
+              position: 0
+          };
+      },
+      resolveSetTimeout: function() {
+          if (this.state.position < this.props.position) {
+              this.setState({
+                  position: this.state.position + 1
+              });
+          }
+      },
+      componentDidUpdate: function() {
+          if (this.props.position) {
+              setTimeout(this.resolveSetTimeout, this.props.timeoutMs);
+          }
+      },
+      render: function() {
+              var divStyle = {
+                  marginLeft: this.state.position
+              };
+              return <div style={divStyle}> This will animate! </div> 
+          } 
+      }) 
+ ReactDOM.render(<Positioner/>, document.getElementById('example'));
+ ReactDOM.render(<Positioner position={100} timeoutMs={10} />, document.getElementById('example'));
+```
+以上代码使用`setTimeout`实现文字向右移动`100px`的功能。
+
+#### React使用rAF动画
+rAF = requestAnimationFrame 即优化过的JS模拟动画,兼容IE10+,普通JS动画改`width`、`height`是有先后顺序的，而rAF则是同时改变`width`和`height`。
+* 实例： (查看[Demo](animation/animation-rAF.html))
+```js
+var Positioner = React.createClass({
+    getInitialState: function() {
+        return {
+            position: 0
+        };
+    },
+    resolveSetTimeout: function() {
+        if (this.state.position < this.props.position) {
+            this.setState({
+                position: this.state.position + 1
+            });
+        }
+    },
+    componentDidUpdate: function() {
+        if (this.props.position) {
+            requestAnimationFrame(this.resolveSetTimeout);
+        }
+    },
+    render: function() {
+            var divStyle = {
+                marginLeft: this.state.position
+            };
+            return <div style={divStyle}> This will animate! </div> 
+        } 
+    }) ;
+ReactDOM.render(<Positioner/>, document.getElementById('example'));
+ReactDOM.render(<Positioner position={100}  />, document.getElementById('example'));
+```
+##React 组件性能调优
+#### 原因
+React在开发的时候就非常注重性能，作为前端框架性能是极其重要的评判标准
+React提高性能的方式：虚拟DOM，diff算法，将DOM操作减到最少
+但是……
+* 父组件更新默认触发所有子组件更新
+* 列表类型的组件默认更新方式非常复杂
+#### 调优原理
+性能问题：
+* 父组件更新默认触发所有子组件更新
+* 列表类型的组件默认更新方式非常复杂
+解决方法
+*子组件覆盖shouldComponentUpdate方法，自行决定是否更新
+* 给列表中的组件添加key属性
+![React调优原理](images/components-optimization.png)
+
+
+
 
 
 
