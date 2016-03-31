@@ -1593,7 +1593,10 @@ TestUtils.scryRenderedDOMComponentsWithTag(subject, "li")
 ```
 以上代码功能是定位和寻找子组件返回一个集合，第一个参数是组件，第二个是标签。
 
-Jasmine
+#### Jasmine
+#### Mocha
+#### Enzyme
+
 
 
 
