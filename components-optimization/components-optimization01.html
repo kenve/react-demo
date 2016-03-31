@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react-with-addons.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+     var NumberDiv = React.createClass({
+            getInitialState: function () {
+                return {
+                    number: this.props.number,
+                }
+            },
+            render: function () {
+                var style = {
+                    height: "100px",
+                    width: "100px",
+                    float: "left",
+                    margin: "10px",
+                    backgroundColor: "gray",
+                }
+                var chosedStyle = {
+                    height: "100px",
+                    width: "100px",
+                    float: "left",
+                    margin: "10px",
+                    backgroundColor: "red",
+                }
+                return <div style={this.props.chosedNumber === this.state.number ? chosedStyle : style}>
+                    {this.state.number}
+                </div>
+            }
+        })
+        var ChooseNumber = React.createClass({ 
+            getInitialState: function () {
+                return {
+                    inputNumber: -1,
+                    lastNumber: -1
+                }
+            },
+            handleChange: function (e) {
+                if (parseInt(e.target.value) !== this.state.inputNumber) {
+                    this.setState({
+                        inputNumber: parseInt(e.target.value),
+                        lastNumber: this.state.inputNumber
+                    })
+                }  
+            },
+            render: function () {
+                var inputStyle = {
+                    display: "block",
+                    clear: "both",
+                    width: "200px",
+                    marginBottom: "10px",
+                }
+                var children = []
+                for (var i = 0; i < 5000; i++) {
+                    children.push(<NumberDiv key={i} chosedNumber={this.state.inputNumber} number={i}></NumberDiv>) 
+                }
+                return <div> 
+                    <input type="text" style={inputStyle} placeholder="请输入一个数字" onChange={this.handleChange} />
+                    {children}
+                </div>;
+            } 
+        });
+        ReactDOM.render( <ChooseNumber/>, document.getElementById('example')); 
+    </script>
+</body>
+
+</html>
