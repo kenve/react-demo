@@ -1368,10 +1368,10 @@ React提高性能的方式：虚拟DOM，diff算法，将DOM操作减到最少
 * 父组件更新默认触发所有子组件更新
 * 列表类型的组件默认更新方式非常复杂
 解决方法
-*子组件覆盖shouldComponentUpdate方法，自行决定是否更新
+* 子组件覆盖shouldComponentUpdate方法，自行决定是否更新
 * 给列表中的组件添加key属性
 
-![React调优原理](images/components-optimization.png)
+* ![React调优原理](images/components-optimization.png)
 
 
 
