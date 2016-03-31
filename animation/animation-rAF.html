@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+       var Positioner = React.createClass({
+        getInitialState: function() {
+            return {
+                position: 0
+            };
+        },
+        resolveSetTimeout: function() {
+            if (this.state.position < this.props.position) {
+                this.setState({
+                    position: this.state.position + 1
+                });
+            }
+        },
+        componentDidUpdate: function() {
+            if (this.props.position) {
+                requestAnimationFrame(this.resolveSetTimeout);
+            }
+        },
+        render: function() {
+                var divStyle = {
+                    marginLeft: this.state.position
+                };
+                return <div style={divStyle}> This will animate! </div> 
+            } 
+        }) ;
+   ReactDOM.render(<Positioner/>, document.getElementById('example'));
+   ReactDOM.render(<Positioner position={100}  />, document.getElementById('example'));
+    </script>
+</body>
+
+</html>
