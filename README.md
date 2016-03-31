@@ -39,7 +39,7 @@ React官网提供的Html模板，所有demo都是在这个Html模板内编写的
       );
     </script>
 ```
-上面代码是将一个`h1`便签，插入`id`为`example`的dom节点下（查看代码 [helloword](http://facebook.github.io/react/docs/displaying-data.html#jsx-syntax) ）
+上面代码是将一个`h1`便签，插入`id`为`example`的dom节点下（查看代码 [helloworld](helloworld/helloworld01.html) ）
 ## JSX
 #### 什么是JSX
    * JSX=JavaScript XML
