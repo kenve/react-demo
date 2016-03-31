@@ -1370,6 +1370,7 @@ React提高性能的方式：虚拟DOM，diff算法，将DOM操作减到最少
 解决方法
 *子组件覆盖shouldComponentUpdate方法，自行决定是否更新
 * 给列表中的组件添加key属性
+
 ![React调优原理](images/components-optimization.png)
 
 
