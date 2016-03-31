@@ -1011,8 +1011,8 @@ render: function() {
 });
 ReactDOM.render( <BindExample/>, document.getElementById('example')); 
 ```
-以上代码，定义了一个名称为`BindingMixin`的`Mixin`,在里面定义了一个`handleChange`的处理函数，该处理函数接收一个参数`key`,处理函数里面定义了变量`that`存储`this`(因为在`this`值在函数的函数里面会丢失)。声明`newState`对象存储`state`的值，最后返回一个事件处理函数。
-在`BindExample` 组件中使用`mixin`的语法为`mixins:[BindingMixin]`,在渲染页面时使用`onChange={this.handleChange('comment')}` 调用`mixin`中的方法。
+以上代码，定义了一个名称为`BindingMixin`的Mixin,在里面定义了一个`handleChange`的处理函数，该处理函数接收一个参数`key`,处理函数里面定义了变量`that`存储`this`(因为在`this`值在函数的函数里面会丢失)。声明`newState`对象存储`state`的值，最后返回一个事件处理函数。
+在`BindExample` 组件中使用mixin的语法为`mixins:[BindingMixin]`,在渲染页面时使用`onChange={this.handleChange('comment')}` 调用`mixin`中的方法。
 #### addons中的mixin 
 使用`addons`中的`mixin`,首先在`head`引入`react-with-addons.js`文件
 查看[Demo](webcomponents/mixin02.html) 
@@ -1046,7 +1046,7 @@ ReactDOM.render( <BindingExample/>, document.getElementById('example'));
 //获得上面的值，使用ref访问真实的`DOM`,然后获取值
 var inputValue = React.findDOMNode(this.refs.input).value
 ```
-`数据被写死在`input`中而不是存储在`state`，使得组件中的数据和`state`中的数据不对应，数据不可控。
+数据被写死在`input`中而不是存储在`state`，使得组件中的数据和`state`中的数据不对应，数据不可控。
 #### 可控组件
 查看[Demo](form/controlled-components.html)
 ```js
@@ -1214,14 +1214,14 @@ var MyForm = React.createClass({
  * SVG：`<animate>`
 
 名称 | 优点 | 缺点
------------- | -------------
+------------ | ------------- | -------------
 CSS3动画 | 高性能、易于使用 | 兼容性差、无法实现复杂效果
 JS模拟动画 | 兼容性强 | 性能差、难以调试
 rAF动画 | 兼容性一般、性能较高 | 将被CSS3替代
 SVG动画 | 高性能、能实现复杂效果 | 编写难度较大
 
 #### React使用CSS3动画
-传统的CSS3动画使用`$(...).addClass(...)`的方式控制`class`实现动画效果，而在`React`中这一步由`React`插件完成
+传统的CSS3动画使用`$(...).addClass(...)`的方式控制`class`实现动画效果，而在React中这一步由React插件完成
 ![React中CSS3动画用法](images/animation-css3.png)
 * 实例 (查看[Demo](animation/animation-css3.html))
 在`head`中引入`react-with-addons.js`，并添加组件的四个状态的CSS3动画样式：
@@ -1356,6 +1356,90 @@ var Positioner = React.createClass({
 ReactDOM.render(<Positioner/>, document.getElementById('example'));
 ReactDOM.render(<Positioner position={100}  />, document.getElementById('example'));
 ```
+
+## React中使用 AJAX
+组件的数据来源，通常是通过 Ajax 请求从服务器获取，可以使用 `componentDidMount `方法设置 Ajax 请求，等到请求成功，再用 `this.setState` 方法重新渲染 UI。
+实例：代码使用 jQuery 完成 Ajax 请求，这是为了便于说明。React 本身没有任何依赖。（查看[Demo](ajax/ajax01.html)）
+```js
+ var UserGist = React.createClass({
+   getInitialState: function() {
+     return {
+       username: '',
+       lastGistUrl: ''
+     };
+   },
+   componentDidMount: function() {
+     $.get(this.props.source, function(result) {
+       var lastGist = result[0];
+       if (this.isMounted()) {
+         this.setState({
+           username: lastGist.owner.login,
+           lastGistUrl: lastGist.html_url
+         });
+       }
+     }.bind(this));
+   },
+   render: function() {
+     return (
+       <div>
+         {this.state.username}'s last gist is
+         <a href={this.state.lastGistUrl}>here</a>.
+       </div>
+     );
+   }
+ });
+ ReactDOM.render(
+   <UserGist source="https://api.github.com/users/octocat/gists" />,
+   document.getElementById('example')
+ );
+```
+实例：可以把一个Promise对象传入组件。（查看[Demo](ajax/ajax02.html)）
+```js
+var RepoList = React.createClass({ 
+    getInitialState: function() { 
+       return { 
+           loading: true,
+            error: null, 
+            data: null}; 
+    },
+     componentDidMount() { 
+          this.props.promise.then( 
+            value => this.setState({
+              loading: false, 
+              data: value
+            }), 
+            error => this.setState({
+              loading: false,
+               error: error
+            }));
+      }, 
+      render: function() {
+            if (this.state.loading) { 
+                return <span>Loading...</span>;
+            } else if (this.state.error !== null) {
+                return <span>Error: {this.state.error.message}</span>; 
+            } else { 
+              var repos = this.state.data.items; 
+              var repoList = repos.map(function (repo) { 
+              return (<li>
+            <a href={repo.html_url}>{repo.name}</a> 
+            ({repo.stargazers_count} stars)
+            <br/> 
+            {repo.description}
+           </li>
+      ); }); return (
+      <main>
+          <h1>Most Popular JavaScript Projects in Github</h1>
+          <ol>{repoList}</ol>
+      </main>
+      ); } } }); ReactDOM.render(
+      <RepoList promise={
+      $.getJSON( 'https://api.github.com/search/repositories?q=javascript&sort=stars')
+      } />, document.getElementById('example'));
+```
+上面代码从Github的API抓取数据，然后将Promise对象作为属性，传给`RepoList`组件。
+如果Promise对象正在抓取数据（pending状态），组件显示"正在加载"；如果Promise对象报错（rejected状态），组件显示报错信息；如果Promise对象抓取数据成功（fulfilled状态），组件显示获取的数据。
+
 ##React 组件性能调优
 #### 原因
 React在开发的时候就非常注重性能，作为前端框架性能是极其重要的评判标准
@@ -1370,14 +1454,99 @@ React提高性能的方式：虚拟DOM，diff算法，将DOM操作减到最少
 解决方法
 * 子组件覆盖shouldComponentUpdate方法，自行决定是否更新
 * 给列表中的组件添加key属性
+* ![React调优原理](http://facebook.github.io/react/img/docs/should-component-update.png)
+覆盖了`shouldComponentUpdate`之后的更新流程，`SCU`红色表示`false`,绿色表示`true`，返回`true`的话就触发整个更新流程，`false`为跳过更新流程。`vDOMEq`表示虚拟`dom`节点是否相同
 
-* ![React调优原理](images/components-optimization.png)
+#### 寻找性能热点
+* React性能分析工具
 
+![React调优原理](images/components-optimization-tool.png)
 
+```js
+//一个动作超过200ms ，用户就有感知
+React.addons.Perf.start();//开始记录时间
+React.addons.Perf.stop();//停止记录时间
+React.addons.Perf.printInclusive();//输出时间
+```
+调优前实例：(查看[Demo](images/components-optimization01.html))
 
+![React分析工具结果](images/components-optimization-result01.png)
+调优点，父组件更新是每次都更新子组件，所以添加覆盖`shouldComponentUpdate`方法判断是否要更新子组件。
 
+```js
+//调优点，每次都更新子组件，添加此方法判断是否更新子组件
+shouldComponentUpdate: function (nextProps) {
+    return nextProps.render
+},
+//...
+//通知子组件是否要更新
+render={i == this.state.inputNumber || i == this.state.lastNumber} 
+```
+调优后实例：(查看[Demo](images/components-optimization02.html))
 
+![React分析工具结果](images/components-optimization-result02.png)
+#### 解决性能问题
+* PureRenderMixin
+React官方提供的Mixin，用于“简单的”判断是否需要进入更新流程
+本质上就是判断状态和属性是否改变
+* Immutability
+Immutability Helpers，实现JS不可变对象
+修改不可变对象会返回一个新对象，之前的对象保持不变
+不同对象在JS引擎中的引用不同，因此直接比较引用即可确定是否发生改变
+基本语法：update(obj, cmd)
 
+ 执行前 | 执行命令 | 执行后
+ ------ | -------- | ------ 
+ a = [1, 2, 3] | update(a, {$push: [4]}) | [1, 2, 3, 4] 
+ a = [1, 2, 3] | update(a, {$unshift: [3]}) | [1, 2]  
+ a = [1, 2, 3] | update(a, {$splice: [1, 1, 4]}) | [4, 2, 3]  
+ a = [1, 2, 3] | update(a, {$set: [1, 2, 3]}) | [1, 2, 3]  
+ a = {i: 3} | update(a, {$merge: {j: 4}}) | {i: 3, j: 4}  
+ a = [1, 2, 3] | update(a, {$apply: function(x) {return x * 2;}}) | [2, 4, 6]  
+
+## React开发工具
+* [Gulp](http://gulpjs.com/)  
+* [Browserify](http://browserify.org/) 
+* [Webpack](https://webpack.github.io/)
+
+## React的相关库
+#### 测试库 Jest （无法在windows中使用）
+[Jest](https://facebook.github.io/jest/)是Facebook开发的一个JavaScript的单元测试工具，单元测试可以保证函数或者模块完成我们想要的功能，使用Jest需要配置NodeJS环境。
+常见的测试：
+ * 单元测试：测试具体功能是否正常
+ * 集成测试：测试整个系统是否正常
+ * 回归测试：确保改动没有破坏系统
+ * 冒烟测试：快速发现问题
+ * 压力测试：确定系统性能
+
+安装：
+```
+$ npm install jest-cli --save-dev
+```
+使用([查看文档](https://facebook.github.io/jest/))：
+Let's get started by writing a test for a hypothetical sum.js file:
+```js
+function sum(a, b) {
+  return a + b;
+}
+module.exports = sum;
+```
+Create a directory `__tests__`/ with a file sum-test.js:
+```js
+jest.unmock('../sum'); // unmock to use the actual implementation of sum
+
+describe('sum', () => {
+  it('adds 1 + 2 to equal 3', () => {
+    const sum = require('../sum');
+    expect(sum(1, 2)).toBe(3);
+  });
+});
+```
+
+#### ImmutableJS
+ImmutableJS是Facebook开发的一个JS库，能够在JS中实现不可变对象
+不可变对象可以大大提高对象比较性能，用于状态和属性判断非常有效
+实际上，提高比较性能的代价是降低修改性能，只不过收益更大。
 
 
 
