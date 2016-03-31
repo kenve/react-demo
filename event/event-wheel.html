@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+        var HelloWorld=React.createClass({
+          getInitialState:function () {
+            return {
+               backgroundColor:'#fffff'
+            };
+          },
+            handleWheel:function(event){
+              var newColor = (parseInt(this.state.backgroundColor.substr(1), 16) + event.deltaY * 997).toString(16);
+                newColor = '#' + newColor.substr(newColor.length - 6).toUpperCase();
+                this.setState({
+                    backgroundColor: newColor
+                });
+            },
+            render:function(){
+                 console.log(this.state);
+              return (
+                <div onWheel={this.handleWheel} style={this.state}>
+                <p>Hello, World</p>
+                </div>
+              )
+            }
+        });
+        ReactDOM.render( <HelloWorld/>, document.getElementById('example') ); 
+    </script>
+</body>
+
+</html>
