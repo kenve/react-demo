@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+      var MyForm = React.createClass({ 
+            getInitialState: function () {
+                return {
+                    helloTo: "Hello World!"
+                }; 
+            },
+            handleChange: function (event) { 
+                this.setState({
+                    helloTo: event.target.value
+                });
+            },
+            submitHandler: function (event) {
+                event.preventDefault();
+                alert(this.state.helloTo); 
+            },
+            render: function () {
+                return <form onSubmit={this.submitHandler}>
+                    <input type="text" value={this.state.helloTo} onChange={this.handleChange} />
+                    <br />
+                    <button type="submit">Speak</button>
+                </form>;
+                } 
+            });
+        ReactDOM.render( <MyForm/>, document.getElementById('example')); 
+    </script>
+</body>
+
+</html>

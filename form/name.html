@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+ var MyForm = React.createClass({ 
+            getInitialState: function () {
+                return {
+                    username: "",
+                    gender: "man",
+                    checked: true
+                }; 
+            },
+            handleChange: function (event) { 
+                var newState = {};
+                newState[event.target.name] = event.target.name == "checked" ? event.target.checked : event.target.value;
+                this.setState(newState);
+            },
+            submitHandler: function (event) {
+                event.preventDefault();
+                console.log(this.state); 
+            },
+            render: function () {
+                return <form onSubmit={this.submitHandler}>
+                    <label htmlFor="username">请输入用户名:</label>
+                    <input name="username" id="username" type="text" value={this.state.username} onChange={this.handleChange} />
+                    <br />
+                    <select name="gender" value={this.state.gender} onChange={this.handleChange}> 
+                        <option value="man">男</option>
+                        <option value="woman">女</option>
+                    </select>
+                    <br />
+                    <label htmlFor="checkbox">同意用户协议</label>
+                    <input id="checkbox" name="checked" type="checkbox" value="agree" checked={this.state.checked} onChange={this.handleChange} />
+                    <button type="submit">注册</button>
+                </form>;
+                } 
+            });
+        ReactDOM.render( <MyForm/>, document.getElementById('example')); 
+    </script>
+</body>
+
+</html>
