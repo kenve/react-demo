@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+    //子夫组建传值
+    var HelloWorld = React.createClass({
+        render: function() {
+            return ( < p >
+                Hello, {this.props.name1 + ' ' + this.props.name2}< /p>
+            );
+        }
+    });
+     var HelloUniverse = React.createClass({
+        getInitialState: function () {
+            return {
+                name1: 'Tim',
+                name2: 'John',
+            };
+        },
+        render: function () {
+            return (
+            <HelloWorld {...this.state}></HelloWorld>
+            )
+        },
+    });
+    ReactDOM.render(<HelloUniverse/>, document.getElementById('example')); 
+    </script>
+</body>
+
+</html>
