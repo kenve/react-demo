@@ -1360,7 +1360,7 @@ ReactDOM.render(<Positioner position={100}  />, document.getElementById('example
 ## React中使用 AJAX
 组件的数据来源，通常是通过 Ajax 请求从服务器获取，可以使用 `componentDidMount `方法设置 Ajax 请求，等到请求成功，再用 `this.setState` 方法重新渲染 UI。
 实例：代码使用 jQuery 完成 Ajax 请求，这是为了便于说明。React 本身没有任何依赖。（查看[Demo](ajax/ajax01.html)）
-```js
+```html
  var UserGist = React.createClass({
    getInitialState: function() {
      return {
@@ -1455,6 +1455,8 @@ React提高性能的方式：虚拟DOM，diff算法，将DOM操作减到最少
 * 子组件覆盖shouldComponentUpdate方法，自行决定是否更新
 * 给列表中的组件添加key属性
 * ![React调优原理](http://facebook.github.io/react/img/docs/should-component-update.png)
+
+
 覆盖了`shouldComponentUpdate`之后的更新流程，`SCU`红色表示`false`,绿色表示`true`，返回`true`的话就触发整个更新流程，`false`为跳过更新流程。`vDOMEq`表示虚拟`dom`节点是否相同
 
 #### 寻找性能热点
@@ -1531,7 +1533,7 @@ function sum(a, b) {
 }
 module.exports = sum;
 ```
-Create a directory `__tests__`/ with a file sum-test.js:
+Create a directory `__tests__`/ with a file `sum-test.js`:
 ```js
 jest.unmock('../sum'); // unmock to use the actual implementation of sum
 
@@ -1544,9 +1546,55 @@ describe('sum', () => {
 ```
 
 #### ImmutableJS
-ImmutableJS是Facebook开发的一个JS库，能够在JS中实现不可变对象
+[Immutable-js](https://github.com/facebook/immutable-js)是Facebook开发的一个JS库，能够在JS中实现不可变对象
 不可变对象可以大大提高对象比较性能，用于状态和属性判断非常有效
 实际上，提高比较性能的代价是降低修改性能，只不过收益更大。
+
+原理：
+
+
+![Immutable-js原理](images/Immutable-js.gif)
+
+
+实例：(查看[Demo](immutable-js/))
+
+#### Flux 
+[Flux](https://facebook.github.io/flux/)不是一个具体的框架，而是Facebook提出的一种代码架构
+React只是一个视图库，Flux是在React基础上对于前端整体的组织方案
+传统的MVC只适用于中小型系统，对大规模系统来说MVC复杂度过高
+Flux的目的是保证逻辑清晰，数据流向清晰，依赖关系清晰
+贯彻数据单向流动
+
+
+![Flux架构](https://facebook.github.io/flux/img/flux-simple-f8-diagram-explained-1300w.png)
+
+
+官方事例（查看官方[example](https://github.com/facebook/flux/tree/master/examples/)）：
+
+## React测试工具
+#### TestUtils 
+React自带了测试工具：`React.addons.TestUtils`  （查看[官方文档](http://facebook.github.io/react/docs/test-utils.html)）
+使用TestUtils可以：模拟操作、渲染组件、定位和操作子组件
+TestUtils只是封装了和React相关的内容，还需要结合其他测试工具使用
+
+用法：
+```js
+TestUtils.renderIntoDocument(<helloworld></helloworld>)
+```
+利用`renderIntoDocument`方法把目标组件渲染到DOM节点中。
+
+```js
+React.addons.TestUtils.Simulate.click(node)
+```
+使用`Simulate`模拟操作，如模拟点击`Simulate.click(node)`，其中`node`为dom节点。
+
+```js
+TestUtils.scryRenderedDOMComponentsWithTag(subject, "li")
+```
+以上代码功能是定位和寻找子组件返回一个集合，第一个参数是组件，第二个是标签。
+
+Jasmine
+
 
 
 
