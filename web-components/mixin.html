@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+       var BindingMixin={
+        handleChange:function (key) {
+          var that=this;
+          var newState={};
+          return function (event) {
+            newState[key]=event.target.value;
+            that.setState(newState);
+          }
+        }
+       }
+       var BindExample=React.createClass({
+        mixins:[BindingMixin],
+        getInitialState: function() {
+            return {
+                text: '',
+                comment: '',
+            }
+        },
+        render: function() {
+            return (<div>
+                <input type="text" placeholder="请输入内容" onChange={this.handleChange('text')} />
+                <textarea onChange={this.handleChange('comment')}></textarea>
+                <p>{this.state.text}</p>
+                <p>{this.state.comment}</p>
+            </div>);
+        }
+       });
+        ReactDOM.render( <BindExample/>, document.getElementById('example')); 
+    </script>
+</body>
+
+</html>

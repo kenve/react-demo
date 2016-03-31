@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react-with-addons.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+       var BindingExample=React.createClass({
+        mixins:[React.addons.LinkedStateMixin],
+        getInitialState: function() {
+            return {
+                text: '',
+                comment: '',
+            }
+        },
+        render: function() {
+            return (<div>
+                <input type="text" placeholder="请输入内容" valueLink={this.linkState('text')} />
+                <textarea valueLink={this.linkState('comment')}></textarea>
+                <p>{this.state.text}</p>
+                <p>{this.state.comment}</p>
+            </div>);
+        }
+       });
+        ReactDOM.render( <BindingExample/>, document.getElementById('example')); 
+    </script>
+</body>
+
+</html>
