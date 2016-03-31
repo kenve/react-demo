@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+        // HelloWorld组件
+        var HelloWorld = React.createClass({ 
+        	//父组件修改属性触发，可以修改新属性、修改状态
+         	componentWillReceiveProps:function () {
+         		console.log('componentWillReceiveProps,1');
+         	},
+         	//返回false会阻止render调用
+         	shouldComponentUpdate:function () {
+         		console.log('shouldComponentUpdate,2');
+         		return true;
+         	},
+         	//不能修改属性和状态
+         	componentWillUpdate:function () {
+         		console.log('componentWillUpdate,3');
+         	},
+         	//只能访问this.props和this.state，只有一个顶层组件，不允许修改状态和DOM输出
+         	render: function() { 
+         		console.log('render,4');
+	         	return (<p>Hello ,{this.props.name ? this.props.name : "World"}</p>); 
+           },
+           //可以修改DOM
+            componentDidUpdate:function () {
+            	console.log('componentDidUpdate,5');
+            }
+       }); 
+        //HelloUniverse组件
+        var HelloUniverse=React.createClass({
+        	getInitialState:function () {
+        		return {name:''};
+        	},
+        	//自定义事件处理方法
+        	handleChange:function (event) {
+        		this.setState({
+        			name:event.target.value
+        		});
+        	},
+        	render:function () {
+        		return (
+        			<div>
+        			   <HelloWorld name={this.state.name}/>
+        			   <br/>
+        			   <input type="text" onChange={this.handleChange}/>
+        			</div>
+        	    )
+        	}
+        });
+    ReactDOM.render(<HelloUniverse/>, document.getElementById('example') );
+    </script>
+</body>
+
+</html>

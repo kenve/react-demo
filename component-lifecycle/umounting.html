@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+        var HelloWorld = React.createClass({ 
+         	render: function() { 
+         		console.log('render,4');
+	         	return (<p>Hello ,{this.props.name ? this.props.name : "World"}</p>); 
+           },
+           //在删除组件之前进行清理操作，比如计时器和事件监听器
+            componentWillUnmount:function () {
+                console.log('componentWillUnmount:BOOOOOOOOOOOOOOOOOM');
+            }
+       }); 
+        var HelloUniverse=React.createClass({
+        	getInitialState:function () {
+        		return {name:''};
+        	},
+        	//自定义事件处理方法
+        	handleChange:function (event) {
+                if (event.target.value == "123") {
+                    //移除dom中的内容
+                    ReactDOM.unmountComponentAtNode(document.getElementById('example'));
+                    return;
+                }
+        		this.setState({
+        			name:event.target.value
+        		});
+        	},
+        	render:function () {
+        		return (
+        			<div>
+        			   <HelloWorld name={this.state.name}/>
+        			   <br/>
+        			   <input type="text" onChange={this.handleChange}/>
+        			</div>
+        	    )
+        	}
+        });
+    ReactDOM.render(<HelloUniverse/>, document.getElementById('example') );
+    </script>
+</body>
+
+</html>
