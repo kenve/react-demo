@@ -1,4 +1,4 @@
-##React是什么
+## React是什么
 1. facebook 2013 发布
 2. React 兼容IE8+
 
@@ -1452,7 +1452,7 @@ React提高性能的方式：虚拟DOM，diff算法，将DOM操作减到最少
 * 父组件更新默认触发所有子组件更新
 * 列表类型的组件默认更新方式非常复杂
 解决方法
-* 子组件覆盖shouldComponentUpdate方法，自行决定是否更新
+* 子组件覆盖`shouldComponentUpdate`方法，自行决定是否更新
 * 给列表中的组件添加key属性
 * ![React调优原理](http://facebook.github.io/react/img/docs/should-component-update.png)
 
@@ -1506,6 +1506,42 @@ Immutability Helpers，实现JS不可变对象
  a = {i: 3} | update(a, {$merge: {j: 4}}) | {i: 3, j: 4}  
  a = [1, 2, 3] | update(a, {$apply: function(x) {return x * 2;}}) | [2, 4, 6]  
 
+## 在React使用ES6 Classes 
+[官方文档](http://facebook.github.io/react/docs/reusable-components.html#es6-classes)
+```js
+class HelloMessage extends React.Component {
+  render() {
+    return <div>Hello {this.props.name}</div>;
+  }
+}
+ReactDOM.render(<HelloMessage name="Sebastian" />, mountNode);
+```
+>The API is similar to React.createClass with the exception of getInitialState. Instead of providing a separate getInitialState method, you set up your own state property in the constructor.
+
+>Another difference is that propTypes and defaultProps are defined as properties on the constructor instead of in the class body.
+
+```js
+export class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {count: props.initialCount};
+    this.tick = this.tick.bind(this);
+  }
+  tick() {
+    this.setState({count: this.state.count + 1});
+  }
+  render() {
+    return (
+      <div onClick={this.tick}>
+        Clicks: {this.state.count}
+      </div>
+    );
+  }
+}
+Counter.propTypes = { initialCount: React.PropTypes.number };
+Counter.defaultProps = { initialCount: 0 };
+```
+No Autobinding,No Mixins
 ## React开发工具
 * [Gulp](http://gulpjs.com/)  
 * [Browserify](http://browserify.org/) 
@@ -1598,6 +1634,14 @@ TestUtils.scryRenderedDOMComponentsWithTag(subject, "li")
 #### Enzyme
 
 ## React项目实战
+#### TTD
+TDD：Test-driven development 测试驱动开发
+先写测试，再进行开发，用测试驱动开发和重构。
+各种驱动开发：
+ * DDD，设计驱动开发
+ * BDD，行为驱动开发
+ * FDD，特性驱动开发
+ * HDD，假设驱动开发
 
 
 
